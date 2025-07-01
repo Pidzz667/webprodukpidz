@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Jualan</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Modern Theme: Darker, cleaner background with subtle gradient */
+            background: linear-gradient(to bottom right, #1F2937, #111827); /* Dark Slate to Very Dark Blue */
+            color: #E5E7EB; /* Light gray text for contrast */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* overflow: hidden; -- REMOVED to enable scrolling */
+            position: relative;
+        }
+
+        .container {
+            background-color: #2D3748; /* Darker blue-gray, solid */
+            padding: 2.5rem;
+            border-radius: 1rem; /* More rounded for modern feel */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4); /* Softer, larger shadow */
+            max-width: 90%;
+            width: 500px;
+            text-align: center;
+            border: 1px solid #4B5563; /* Subtle, slightly lighter border */
+            position: relative;
+            z-index: 1; /* Ensure content is above any potential background */
+            animation: fadeIn 0.8s ease-out; /* Fade in animation for container */
+            /* Added margin-y auto to allow vertical centering with scrolling */
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        /* Modern Login Page Specific Styles */
+        #login-page.container {
+            background-color: #2D3748; /* Consistent background */
+            border: 2px solid #6366F1; /* Prominent, modern border */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), /* Softer main shadow */
+                        0 0 0 5px rgba(99, 102, 241, 0.2); /* Subtle outer glow */
+            transform: none; /* No initial transform for login container */
+            transition: all 0.3s ease-in-out;
+        }
+        #login-page.container:hover {
+            transform: scale(1.01); /* Subtle scale up on hover for login */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6),
+                        0 0 0 8px rgba(99, 102, 241, 0.3); /* Enhanced glow on hover */
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #6366F1, #8B5CF6);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem; /* More rounded buttons */
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            display: flex; /* For icon alignment */
+            align-items: center; /* For icon alignment */
+            justify-content: center; /* Center content */
+            gap: 0.5rem; /* Space between icon and text */
+        }
+        .btn-primary:hover {
+            background: linear-gradient(to right, #8B5CF6, #A78BFA);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        .btn-primary:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(to right, #5A5FE0, #7A4CD9);
+        }
+
+        .input-field {
+            background-color: #374151;
+            border: 1px solid #4B5563;
+            color: #E5E7EB;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #6366F1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+        }
+        .input-field::placeholder {
+            color: #9CA3AF;
+        }
+        .server-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+            background-color: #374151;
+            border: 1px solid #4B5563;
+        }
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .status-on {
+            background-color: #22C55E;
+        }
+        .status-off {
+            background-color: #EF4444;
+        }
+
+        /* Product Card Styles (with 3D effect - now a div) */
+        .product-card-3d {
+            background-color: #374151; /* Matches input field background */
+            border: none;
+            border-radius: 0.75rem; /* More rounded */
+            padding: 1rem;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            color: #E5E7EB;
+            font-weight: 600;
+            position: relative;
+            /* 3D effect with modern colors */
+            box-shadow:
+                0 4px 0 0 #4B5563, /* Bottom shadow for depth, matching border color */
+                0 8px 15px rgba(0, 0, 0, 0.3); /* General lift shadow */
+            transition: all 0.15s ease-out; /* Smooth transition for hover */
+            outline: none;
+        }
+
+        .product-card-3d:hover {
+            transform: translateY(-3px); /* Lift slightly more on hover */
+            box-shadow:
+                0 6px 0 0 #4B5563, /* Deeper bottom shadow on hover */
+                0 12px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .product-card-3d h3 {
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: #E5E7EB;
+        }
+        .product-card-3d p {
+            font-size: 0.875rem;
+            color: #D1D5DB;
+        }
+
+        #main-page .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        #main-page .header-controls .search-container {
+            flex-grow: 1;
+            min-width: 150px;
+        }
+        #main-page .header-controls .logout-button-container {
+            flex-shrink: 0;
+        }
+        .product-buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+        .product-buttons-container .btn-primary {
+            flex-grow: 1;
+            min-width: 150px;
+            max-width: 200px;
+            height: auto;
+            padding: 0.75rem 1rem;
+            line-height: 1.3;
+        }
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: #2D3748;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+            border: 1px solid #4B5563;
+            width: 90%;
+            max-width: 400px;
+        }
+        .modal-content p {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: #E5E7EB;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .modal-buttons .btn-primary {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+        .payment-methods {
+            background-color: #2D3748;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: left;
+            border: 1px solid #4B5563;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            margin-top: 2rem;
+        }
+        .payment-methods h3 {
+            color: #6366F1;
+            margin-bottom: 1rem;
+        }
+        .payment-methods p {
+            margin-bottom: 0.5rem;
+        }
+        .payment-methods .text-xl {
+            font-weight: 700;
+        }
+        .payment-methods .text-green-400 {
+            color: #4ade80;
+        }
+        .payment-methods .text-blue-400 {
+            color: #60a5fa;
+        }
+        #toggle-password {
+            transition: color 0.1s ease-in-out, transform 0.1s ease-in-out;
+            cursor: pointer;
+        }
+        #toggle-password:active {
+            color: #6366F1;
+            transform: translateY(1px);
+        }
+
+        /* Keyframe for fade-in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Page -->
+    <div id="login-page" class="container">
+        <!-- Changed heading text -->
+        <h2 class="text-3xl font-bold mb-6 text-white">Login untuk membeli keperluan hosting pidz</h2>
+        <form id="login-form" class="flex flex-col gap-4">
+            <input type="text" id="username" placeholder="Username" class="input-field" required>
+            <div class="relative w-full">
+                <input type="password" id="password" placeholder="Password" class="input-field pr-10" required>
+                <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-gray-400 hover:text-white focus:outline-none rounded-r-md">
+                    Show
+                </button>
+            </div>
+            <button type="submit" class="btn-primary w-full">Login</button>
+            <p id="login-error" class="text-red-400 text-sm mt-2 hidden">Username atau Password salah!</p>
+        </form>
+    </div>
+
+    <!-- Main Page -->
+    <div id="main-page" class="container hidden">
+        <!-- Header: Search (left) and Logout (right) -->
+        <div class="header-controls">
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Cari produk..." class="input-field" onkeyup="filterProducts()">
+            </div>
+            <!-- Logout Button -->
+            <div class="logout-button-container">
+                <button id="logout-btn" class="btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Changed heading text -->
+        <h1 class="text-4xl font-bold mb-8 text-white">Selamat Datang Di All Produk PidzHosting</h1>
+
+        <!-- Server Status -->
+        <div class="server-status mb-6">
+            <span id="server-indicator" class="status-indicator status-on"></span>
+            <span id="server-text">Server Online</span>
+        </div>
+
+        <!-- Navigation Buttons (Horizontal Layout) -->
+        <div class="product-buttons-container">
+            <button class="btn-primary" data-category="RESELLER PANEL">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                RESELLER PANEL
+            </button>
+            <button class="btn-primary" data-category="SEWA BOT PUSH">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                SEWA BOT PUSH
+            </button>
+            <button class="btn-primary" data-category="SC BOT WA">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle-code"><path d="M7.9 20A10 10 0 1 0 4 16.1L2 22Z"/><path d="m10 10-2 2 2 2"/><path d="m14 14 2-2-2-2"/></svg>
+                SC BOT WA
+            </button>
+            <button class="btn-primary" data-category="SEWA BOT GRUP">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users-2"><path d="M14 19a6 6 0 0 0-12 0"/><circle cx="8" cy="10" r="4"/><path d="M22 19a6 6 0 0 0-12 0"/><circle cx="16" cy="10" r="4"/></svg>
+                SEWA BOT GRUP
+            </button>
+            <button class="btn-primary" data-category="PANEL 1GB-UNLI">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                PANEL 1GB-UNLI
+            </button>
+            <button class="btn-primary" data-category="JASA MEMBUAT WEB HOSTING">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20A14.5 14.5 0 0 0 12 2"/><path d="M2 12h20"/></svg>
+                JASA MEMBUAT<br>WEB HOSTING
+            </button>
+        </div>
+
+        <!-- Product List (Dynamically populated) -->
+        <div id="product-list" class="grid grid-cols-1 gap-4 mb-8">
+            <!-- Products will be loaded here dynamically -->
+            <p class="text-center text-gray-400">Pilih kategori di atas untuk melihat produk.</p>
+        </div>
+
+        <!-- Contact Developer -->
+        <div class="mb-8">
+            <p class="text-lg mb-2 text-white">MENGALAMI MASALAH? KLIK DISINI</p>
+            <a href="https://wa.me/6285816148963?text=Halo%20kak%2C%20saya%20mengalami%20masalah%20saat%20ingin%20membeli%20produk%2C%20mohon%20bantuannya." target="_blank" class="btn-primary inline-flex">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square-text"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="13" x2="11" y1="11" y2="11"/><line x1="17" x2="11" y1="15" y2="15"/></svg>
+                Contact Developer
+            </a>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="payment-methods">
+            <h3 class="text-2xl font-bold">Metode Pembayaran</h3>
+            <div class="mb-4">
+                <p class="text-lg font-semibold text-gray-300">DANA:</p>
+                <p class="text-xl text-green-400">088237191979</p>
+                <p class="text-md text-gray-400">Nama: EKA MEIRINA</p>
+            </div>
+            <div>
+                <p class="text-lg font-semibold text-gray-300">QRIS:</p>
+                <p class="text-xl text-blue-400">Langsung Chat Admin Saja</p>
+                <p class="text-md text-gray-400">WhatsApp: 085816148963</p>
+            </div>
+        </div>
+
+        <!-- New Text Below Payment Methods -->
+        <div class="mt-8">
+            <p class="text-3xl font-bold text-white">PidzHosting Real</p>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal hidden">
+        <div class="modal-content">
+            <p id="modal-message">Apakah Anda ingin membeli [Nama Produk]?</p>
+            <div class="modal-buttons">
+                <button id="confirm-buy-btn" class="btn-primary">Konfirmasi</button>
+                <button id="cancel-buy-btn" class="btn-primary !bg-gray-600 hover:!bg-gray-700">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get elements
+        const loginPage = document.getElementById('login-page');
+        const mainPage = document.getElementById('main-page');
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const togglePasswordBtn = document.getElementById('toggle-password');
+        const loginError = document.getElementById('login-error');
+        const logoutBtn = document.getElementById('logout-btn');
+        const searchInput = document.getElementById('search-input');
+        const productList = document.getElementById('product-list');
+        const serverIndicator = document.getElementById('server-indicator');
+        const serverText = document.getElementById('server-text');
+        const categoryButtons = document.querySelectorAll('.product-buttons-container .btn-primary');
+
+        // Modal elements
+        const confirmationModal = document.getElementById('confirmation-modal');
+        const modalMessage = document.getElementById('modal-message');
+        const confirmBuyBtn = document.getElementById('confirm-buy-btn');
+        const cancelBuyBtn = document.getElementById('cancel-buy-btn');
+
+        // Hardcoded credentials
+        const correctUsername = 'PidzAdmin';
+        const correctPassword = 'Admin';
+
+        // WhatsApp number for contact
+        const whatsappNumber = '6285816148963';
+
+        // Product data structure
+        const productsData = {
+            "PANEL 1GB-UNLI": [
+                { name: "LIST PANEL PRIVAT PIDZ 1GB", price: "Rp.2.000", desc: "Panel hosting 1GB." },
+                { name: "LIST PANEL PRIVAT PIDZ 2GB", price: "Rp.3.000", desc: "Panel hosting 2GB." },
+                { name: "LIST PANEL PRIVAT PIDZ 3GB", price: "Rp.4.000", desc: "Panel hosting 3GB." },
+                { name: "LIST PANEL PRIVAT PIDZ 4GB", price: "Rp.5.000", desc: "Panel hosting 4GB." },
+                { name: "LIST PANEL PRIVAT PIDZ 5GB", price: "Rp.6.000", desc: "Panel hosting 5GB." },
+                { name: "LIST PANEL PRIVAT PIDZ 6GB", price: "Rp.7.000", desc: "Panel hosting 6GB." },
+                { name: "LIST PANEL PRIVAT PIDZ 7GB", price: "Rp.8.000", desc: "Panel hosting 7GB." },
+                { name: "LIST PANEL PRIVAT PIDZ 8GB", price: "Rp.9.000", desc: "Panel hosting 8GB." },
+                { name: "LIST PANEL PRIVAT PIDZ 9GB", price: "Rp.10.000", desc: "Panel hosting 9GB." },
+                { name: "LIST PANEL PRIVAT PIDZ 10GB", price: "Rp.11.000", desc: "Panel hosting 10GB." },
+                { name: "LIST PANEL PRIVAT PIDZ UNLI", price: "Rp.12.000", desc: "Panel hosting Unlimited." },
+                { name: "SERVER 100% AMAN ANTI COLONG", price: "N/A", desc: "Jaminan server 100% aman anti colong." }
+            ],
+            "RESELLER PANEL": [
+                { name: "HARGA RESELLER PANEL PIDZ", price: "Rp.10.000", desc: "Akses ke panel reseller PIDZ." }
+            ],
+            "SEWA BOT PUSH": [
+                { name: "SEWA BOT PUSH 5 jam", price: "Rp.3.000", desc: "Sewa bot untuk notifikasi push selama 5 jam." },
+                { name: "SEWA BOT PUSH 10 jam", price: "Rp.7.000", desc: "Sewa bot untuk notifikasi push selama 10 jam." },
+                { name: "SEWA BOT PUSH 1 Hari", price: "Rp.11.000", desc: "Sewa bot untuk notifikasi push selama 1 hari." },
+                { name: "SEWA BOT PUSH 2 Hari", price: "Rp.13.000", desc: "Sewa bot untuk notifikasi push selama 2 hari." },
+                { name: "SEWA BOT PUSH 3 Hari", price: "Rp.15.000", desc: "Sewa bot untuk notifikasi push selama 3 hari." },
+                { name: "SEWA BOT PUSH DAN SETERUSNYA", price: "Hubungi Admin", desc: "Untuk durasi sewa bot push lebih lanjut, silakan hubungi admin." }
+            ],
+            "SC BOT WA": [
+                { name: "SC BOT PUSH ANTI KENON", price: "Rp.4.000", desc: "Script bot push anti kenon." },
+                { name: "SC BOT BUG", price: "Rp.35.000", desc: "(NO UP) Script bot bug." },
+                { name: "SC BOT MD 1000+ FITUR", price: "Rp.6.000", desc: "Script bot MD dengan 1000+ fitur." }
+            ],
+            "SEWA BOT GRUP": [
+                { name: "SEWA BOT GRUP 3 Hari", price: "Rp.5.000", desc: "Sewa bot untuk pengelolaan grup WhatsApp selama 3 hari." },
+                { name: "SEWA BOT GRUP 7 Hari", price: "Rp.8.000", desc: "Sewa bot untuk pengelolaan grup WhatsApp selama 7 hari." },
+                { name: "SEWA BOT GRUP 1 Bulan", price: "Rp.10.000", desc: "Sewa bot untuk pengelolaan grup WhatsApp selama 1 bulan." }
+            ],
+            "JASA MEMBUAT WEB HOSTING": [
+                { name: "JASA MEMBUAT WEB", price: "Rp.25.000", desc: "-BISA REQ NAMA SERVER<br>-BISA TAMBAHIN USERNAME DAN PW<br>-COCOK UNTUK JUALAN" }
+            ]
+        };
+
+        let selectedProductForPurchase = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Removed initCanvas() call
+            if (sessionStorage.getItem('loggedIn') === 'true') {
+                showMainPage();
+            } else {
+                showLoginPage();
+            }
+            updateServerStatus();
+        });
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+
+            if (username === correctUsername && password === correctPassword) {
+                sessionStorage.setItem('loggedIn', 'true');
+                showMainPage();
+                loginError.classList.add('hidden');
+            } else {
+                loginError.classList.remove('hidden');
+            }
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('loggedIn');
+            showLoginPage();
+        });
+
+        togglePasswordBtn.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            togglePasswordBtn.textContent = type === 'password' ? 'Show' : 'Hide';
+        });
+
+        function showLoginPage() {
+            loginPage.classList.remove('hidden');
+            mainPage.classList.add('hidden');
+            usernameInput.value = '';
+            passwordInput.value = '';
+            passwordInput.setAttribute('type', 'password');
+            togglePasswordBtn.textContent = 'Show';
+        }
+
+        function showMainPage() {
+            loginPage.classList.add('hidden');
+            mainPage.classList.remove('hidden');
+        }
+
+        function filterProducts() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const productCards = productList.querySelectorAll('.product-card-3d');
+
+            productCards.forEach(card => {
+                const productName = card.querySelector('h3').textContent.toLowerCase();
+                if (productName.includes(searchTerm)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function updateServerStatus() {
+            const isServerOnline = true;
+
+            if (isServerOnline) {
+                serverIndicator.classList.remove('status-off');
+                serverIndicator.classList.add('status-on');
+                serverText.textContent = 'Server Online';
+            } else {
+                serverIndicator.classList.remove('status-on');
+                serverIndicator.classList.add('status-off');
+                serverText.textContent = 'Server Offline';
+            }
+        }
+
+        function displayProducts(category) {
+            productList.innerHTML = ''; // Clear current products
+            const products = productsData[category];
+
+            if (products && products.length > 0) {
+                products.forEach(product => {
+                    const productCard = document.createElement('div');
+                    productCard.className = 'product-card-3d'; // Use the 3D card class
+                    productCard.innerHTML = `
+                        <h3>${product.name}</h3>
+                        <p>Harga: ${product.price}</p>
+                        <p>${product.desc}</p>
+                        <button class="btn-primary mt-2 buy-btn" data-product-name="${product.name}">Beli</button>
+                    `;
+                    productList.appendChild(productCard);
+                });
+                // Add event listeners to the new "Beli" buttons inside the cards
+                document.querySelectorAll('.buy-btn').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        selectedProductForPurchase = event.target.dataset.productName;
+                        modalMessage.textContent = `Apakah Anda ingin membeli ${selectedProductForPurchase}?`;
+                        confirmationModal.classList.remove('hidden');
+                    });
+                });
+            } else {
+                productList.innerHTML = `<p class="text-center text-gray-400">Tidak ada produk untuk kategori ini.</p>`;
+            }
+        }
+
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const category = event.target.dataset.category;
+                displayProducts(category);
+                searchInput.value = '';
+            });
+        });
+
+        confirmBuyBtn.addEventListener('click', () => {
+            if (selectedProductForPurchase) {
+                const encodedMessage = encodeURIComponent(`Halo kak, saya ingin membeli ${selectedProductForPurchase}, mohon bantuannya.`);
+                window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
+            }
+            confirmationModal.classList.add('hidden');
+            selectedProductForPurchase = null;
+        });
+
+        cancelBuyBtn.addEventListener('click', () => {
+            confirmationModal.classList.add('hidden');
+            selectedProductForPurchase = null;
+        });
+    </script>
+</body>
+</html>
+
